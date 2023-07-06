@@ -1,27 +1,44 @@
 import React, { useState } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import "./style.css";
 
-export const TodoForm = ({ list, setList }) => {
+const validationSchema = Yup.object().shape({
+  title: Yup.string()
+    .required("Please enter a to-do!")
+    .min(3, "Mininum 3 characters required")
+    .max(7, "Maximum 7 characters required"),
+});
+
+export const TodoForm = ({ setList, list }) => {
   const [todo, setTodo] = useState({ title: "" });
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (todo.title.trim() !== "") {
-      setList([...list, todo]);
-      setTodo({ ...todo, title: "" });
-    }
+
+  console.log("list:", list);
+
+  const handleSubmit = (values, { resetForm }) => {
+    console.log(values);
+
+    setList([...list, values]);
+    setTodo({ ...todo, title: "" });
+    resetForm();
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        id="todo"
-        name="todo"
-        value={todo.title}
-        onChange={
-            (e) => setTodo({ ...todo, title: e.target.value })
-        }
-      />
-      <button type="submit">Add Todo</button>
-    </form>
+    <Formik
+      initialValues={todo}
+      validationSchema={validationSchema}
+      onSubmit={handleSubmit}
+    >
+      <Form>
+        <label htmlFor="todo">Title:</label>
+        <div style={{ width: 500, margin: "auto" }}>
+          <Field type="text" id="todo" name="title" className="form-control" />
+        </div>
+        <ErrorMessage name="title" component="div" className="error" />
+        <button type="submit" className="btn btn-primary">
+          Add Todo
+        </button>
+      </Form>
+    </Formik>
   );
 };
