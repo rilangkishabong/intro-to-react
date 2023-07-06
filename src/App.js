@@ -1,22 +1,20 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
-import { Counter } from "./components/counter/Counter";
+import { TodoForm } from "./components/todo/TodoForm";
+import { TodoList } from "./components/todo/TodoList";
+
 
 function App() {
-  const [counter, setCounter] = useState(0)
-  useEffect(() => {
-   counter===3 && alert("counter-value is 3")
-  }, [counter])
-  
+  const [list, setList] = useState([]);
+  console.log("list: ", list);
   return (
-    <div style={{textAlign: "center"}}>
-    {counter>0 && <Counter counter={counter}/>}
-    <div>
-      <button onClick={()=> setCounter(counter+1) }>Increase</button>
-      <button onClick={()=> setCounter(counter-1) }>Decrease</button>
-    </div>
+    <div style={{ textAlign: 'center' }}>
+      <h4>Todo List</h4>
+      <TodoForm setList={setList} list={list} />
+      <TodoList list={list} />
     </div>
   );
 }
+
 
 export default App;
